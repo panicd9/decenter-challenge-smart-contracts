@@ -12,6 +12,9 @@ contract DecenterChallengeTest is Test {
     VatMock vat;
 
     address public USER = makeAddr("user");
+    uint256 RATE_TEST = 1.1 * 10 ** 27;
+    uint256 DEBT_TEST = 1 ether;
+    uint256 COLLATERAL_TEST = 10 ether;
 
     function setUp() external {
         vat = new VatMock();
@@ -23,15 +26,13 @@ contract DecenterChallengeTest is Test {
     }
 
     function test1() public {
-        uint256 rate = 1.1 * 10 ** 27;
-
         vm.startPrank(USER);
         console.log("User address", USER);
 
         manager.open(bytes32("ETH-A"), USER);
 
-        vat.setIlks(bytes32("ETH-A"), 1 ether, rate);
-        vat.setUrns(bytes32("ETH-A"), manager.urns(1), 10 ether, 1 ether);
+        vat.setIlks(bytes32("ETH-A"), DEBT_TEST, RATE_TEST);
+        vat.setUrns(bytes32("ETH-A"), manager.urns(1), COLLATERAL_TEST, DEBT_TEST);
 
         (uint256 ink, uint256 art) = vat.urns(bytes32("ETH-A"), USER);
         console.log("ink: ", ink);
